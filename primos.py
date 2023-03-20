@@ -145,7 +145,7 @@ def mcd(numero1, numero2):
     
 def mcdN(*numeros):
     """
-    Devuelve el mínimo común múltiplo de sus argumentos.
+   Devuelve el máximo común divisor de sus argumentos.
     La función tiene como argumento n números.
 
     >>> mcdN(840, 630, 1050, 1470)
