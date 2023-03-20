@@ -64,26 +64,28 @@ def descompon(numero):
     #return tuple(factor)
 
 
-# Esta función se hizo en clase de laboratorio.
-def dicFact(numero1,numero2):
+def dicFact(numero1, *numero2):
     """
-    Devuelve el factor primo de un número con su correspondiente exponente. 
-    La función tiene como argumento dos números.
+    Devuelve el factor primo de un número con su correspondiente exponente.
+    La función tiene como argumento uno o varios números.
 
-    >>> dicFact(90,14)
+    >>> dicFact(90, 14)
     ({2: 1, 3: 2, 5: 1, 7: 0}, {2: 1, 3: 0, 5: 0, 7: 1})
     """
     factores1 = descompon(numero1)
-    factores2 = descompon(numero2)
-
-    factores = set(factores1 + factores2)  # conjunto, ya que son números únicos
-    dicfact1 ={factor : 0 for factor in factores } 
-    dicfact2 ={factor : 0 for factor in factores} 
-    for factor in factores1 : dicfact1[factor] += 1
-    for factor in factores2 : dicfact2[factor] += 1
-  
-    return dicfact1,dicfact2
+    factores2 = []   #lista vacía
+    for numero in numero2:
+        factores2.extend(descompon(numero)) # descompone el numero2 en factores primos  
+        #y si se suma la lista creada a la lista factores2
     
+    factores = set(list(factores1) + list(factores2)) #se suman factores1 y factores2
+    #transformándolos en listas.
+    dicfact1 = {factor: 0 for factor in factores}
+    dicfact2 = {factor: 0 for factor in factores}
+    for factor in factores1: dicfact1[factor] += 1
+    for factor in factores2: dicfact2[factor] += 1
+    return dicfact1, dicfact2
+
 
 # Esta función se hizo en clase de laboratorio.
 def mcm(numero1, numero2):
@@ -101,6 +103,32 @@ def mcm(numero1, numero2):
     return mcm
     
 
+def mcmN(*numeros):
+    """
+    Devuelve el mínimo común múltiplo de sus argumentos.
+    La función tiene como argumento n números.
+
+    >>> mcmN(90, 14, 28, 35)
+    1260
+    """
+    dicFactNumeros = [dicFact(numero) for numero in numeros] if len(numeros) > 1 else [dicFact(numeros[0])]
+    #se crea una lista dicFactNumeros que contiene los diccionarios de factores primos de cada número
+    #que se pasa como argumento . Si se pasa solo un número se crea una lista con solo un diccionario de factores primos para
+    #ese número
+    factores = set() # conjunto vacío
+    for df1, df2 in dicFactNumeros:
+        factores.update(df1.keys()) #actualiza la clave del diccionario 1 y se suma a factores
+        factores.update(df2.keys()) #actualiza la clave del diccionario 2 y se suma a factores
+    mcmN = 1
+    for factor in factores:
+        mcmN *= factor ** max(dicFact1.get(factor, 0) for dicFact1, dicFact2 in dicFactNumeros) #se usa get para poder acceder al 
+        #valor de la clave del diccionario, si no está devuelve 0.
+    return mcmN
+
+
+
+
+
 def mcd(numero1, numero2):
     """
     Devuelve el máximo común divisor de sus argumentos.
@@ -115,6 +143,23 @@ def mcd(numero1, numero2):
         mcd *= factor ** min(dicFact1[factor],dicFact2[factor])
     return mcd
     
+def mcdN(*numeros):
+    """
+    Devuelve el mínimo común múltiplo de sus argumentos.
+    La función tiene como argumento n números.
+
+    >>> mcdN(840, 630, 1050, 1470)
+    210
+    """
+    dicFactNumeros = [dicFact(numero) for numero in numeros] if len(numeros) > 1 else [dicFact(numeros[0])]
+    factores = set()
+    for df1, df2 in dicFactNumeros:
+        factores.update(df1.keys())
+        factores.update(df2.keys())
+    mcdN = 1
+    for factor in factores:
+        mcdN *= factor ** min(dicFact1.get(factor, 0) for dicFact1, dicFact2 in dicFactNumeros) 
+    return mcdN
 
 
 import doctest
